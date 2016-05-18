@@ -18,6 +18,6 @@ func DirWalkUp(path string, walkFun func(string)error) {
 	}
 }
 
-func FilesRemoveAll(path string) {
+func FilesRemoveAllUpTo(path string) {
 	DirWalkUp(path, os.RemoveAll)
 }

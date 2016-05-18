@@ -59,7 +59,7 @@ func TestDirWalkUp(t *testing.T) {
 	}
 }
 
-func TestFilesRemoveAll(t *testing.T) {
+func TestFilesRemoveAllUpTo(t *testing.T) {
 	testRootDir := "data"
 	testData := struct {
 		path   []string
@@ -129,7 +129,7 @@ func TestFilesRemoveAll(t *testing.T) {
 	}
 
 	// execute test
-	tools.FilesRemoveAll(testData.remove)
+	tools.FilesRemoveAllUpTo(testData.remove)
 
 	// check the exist file structure
 	walkTestFile(func(fullPath string) bool {
