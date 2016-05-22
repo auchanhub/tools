@@ -1,12 +1,14 @@
-package test
+package fhttp
 
 import (
 	"testing"
-	"net/http"
-
-	tools "../"
-	"reflect"
 	"net/url"
+	"net/http"
+	"reflect"
+
+	"github.com/7phones/tools"
+
+	"../../fhttp"
 )
 
 func TestRequestParseParamsGET(t *testing.T) {
@@ -30,7 +32,7 @@ func TestRequestParseParamsGET(t *testing.T) {
 
 	existData := &testData{}
 
-	if err:=tools.RequestParseParams(req, existData); err!=nil {
+	if err := fhttp.RequestParseParams(req, existData); err != nil {
 		t.Error("failed to parse request params", tools.ErrorsDump(err))
 	}
 
@@ -57,7 +59,7 @@ func TestRequestParseParamsPOST(t *testing.T) {
 
 	existData := &testData{}
 
-	if err:=tools.RequestParseParams(req, existData); err!=nil {
+	if err := fhttp.RequestParseParams(req, existData); err != nil {
 		t.Error("failed to parse request params", tools.ErrorsDump(err))
 	}
 
@@ -65,3 +67,4 @@ func TestRequestParseParamsPOST(t *testing.T) {
 		t.Error("the result of request parse is\n", existData, "\n, but the expected result is\n", expectData)
 	}
 }
+
