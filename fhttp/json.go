@@ -32,7 +32,7 @@ type JsonInterfaceHandler interface {
 	Handle(w http.ResponseWriter, req *http.Request) (interface{}, error)
 }
 
-func JsonInterfaceHandle(factory func(*http.Request) JsonInterfaceHandler) http.HandlerFunc {
+func JsonHandler(factory func(*http.Request) JsonInterfaceHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/json; charset=utf-8")
 

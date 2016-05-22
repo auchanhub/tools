@@ -23,7 +23,7 @@ func (o *testChainData) Handle(_ http.ResponseWriter, _ *http.Request) (interfac
 
 func TestChainHandler(t *testing.T) {
 	handler := fhttp.CompressHandler(
-		fhttp.JsonInterfaceHandle(
+		fhttp.JsonHandler(
 			func(req *http.Request) fhttp.JsonInterfaceHandler {
 				return fhttp.BindHandlerParams(req, &testChainData{}).(fhttp.JsonInterfaceHandler)
 			}))

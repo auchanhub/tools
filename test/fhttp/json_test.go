@@ -55,7 +55,7 @@ func TestJsonInterfaceHandle(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	http.HandlerFunc(fhttp.JsonInterfaceHandle(func(*http.Request) fhttp.JsonInterfaceHandler {
+	http.HandlerFunc(fhttp.JsonHandler(func(*http.Request) fhttp.JsonInterfaceHandler {
 		return &testJsonData{}
 	})).ServeHTTP(w, req)
 
