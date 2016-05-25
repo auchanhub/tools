@@ -42,7 +42,7 @@ func (o *testCompressSuite) test(t *testing.T) {
 
 	expectResut := "Hello world!"
 
-	if result, err := fhttp.CompressReadAll(w, w.Body); err != nil || len(result) == 0 {
+	if result, err := fhttp.CompressReadAll(w.Header().Get("Content-Encoding"), w.Body); err != nil || len(result) == 0 {
 		t.Error("failed to read the response", tools.ErrorsDump(err))
 	} else if !reflect.DeepEqual(string(result), expectResut) {
 		t.Error("the response is", string(result), ", but the expected result should contains", expectResut)

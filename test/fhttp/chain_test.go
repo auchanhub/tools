@@ -50,7 +50,7 @@ func TestChainHandler(t *testing.T) {
 
 	expectResult := `{"Accept":"encoding","Encoding":123}`
 
-	if result, err := fhttp.CompressReadAll(w, w.Body); err != nil || len(result) == 0 {
+	if result, err := fhttp.CompressReadAll(w.Header().Get("Content-Encoding"), w.Body); err != nil || len(result) == 0 {
 		t.Error("failed to read the response", tools.ErrorsDump(err))
 	} else if !reflect.DeepEqual(string(result), expectResult) {
 		t.Error("the response is", string(result), ", but the expected result should contains", expectResult)

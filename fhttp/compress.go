@@ -113,12 +113,12 @@ func CompressHandler(handler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func CompressReadAll(w http.ResponseWriter, reader io.Reader) (body []byte, err error) {
+func CompressReadAll(encoding string, reader io.Reader) (body []byte, err error) {
 	var (
 		uncompress io.Reader
 	)
 
-	switch w.Header().Get("Content-Encoding") {
+	switch encoding {
 	case "gzip":
 		uncompress, err = gzip.NewReader(reader)
 

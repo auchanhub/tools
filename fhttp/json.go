@@ -3,6 +3,7 @@ package fhttp
 import (
 	"net/http"
 	"encoding/json"
+    "github.com/pkg/errors"
 )
 
 // The http handler is with result data which should convert to JSON
@@ -50,4 +51,25 @@ func JsonHandler(factory func(*http.Request) JsonInterfaceHandler) http.HandlerF
 
 		w.Write(response)
 	}
+}
+
+func JsonReadUnmarshal(resp *http.Response, data interface{}) (err error) {
+    contentEncoding := ""
+
+    if encoding := resp.Header["Content-Encoding"]; encoding != nil && len(encoding) > 0 {
+        contentEncoding = encoding[0]
+    }
+
+    response, err := CompressReadAll(contentEncoding, resp.Body)
+    if err != nil {
+        err = errors.Wrap(err, "failed to read the response")
+        return
+    }
+
+    if err = json.Unmarshal(response, data); err != nil {
+        err = errors.Wrap(err, "failed to unmarshal JSON")
+        return
+    }
+
+    return
 }
