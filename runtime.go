@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func FuncLineinfo(pc uintptr, file string, line int, _ bool) (fileName string, funcName string, lineNum int) {
+func FuncLineInfo(pc uintptr, file string, line int, _ bool) (fileName string, funcName string, lineNum int) {
 	fileName = file
 	funcName = "unknown"
 	lineNum = line

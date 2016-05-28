@@ -25,11 +25,11 @@ func NewPool(address string, port int) (pool *Pool) {
 
     pool.New = func() interface{} {
         return &http.Client{
-            Timeout: 5 * time.Second,
+            Timeout: 10 * time.Second,
 
             Transport: &http.Transport{
                 Dial: (&net.Dialer{
-                    Timeout: 5 * time.Second,
+                    Timeout: 7 * time.Second,
                 }).Dial,
 
                 TLSHandshakeTimeout: 5 * time.Second,

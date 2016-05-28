@@ -9,7 +9,7 @@ import (
 )
 
 func TestFuncLineinfo(t *testing.T) {
-	fileName, funcName, lineNum := tools.FuncLineinfo(runtime.Caller(0))
+	fileName, funcName, lineNum := tools.FuncLineInfo(runtime.Caller(0))
 
 	if !strings.HasSuffix(fileName, "runtime_test.go") {
 		t.Error("failed to get the caller file name. The result is",fileName,", but the expect result should contains 'runtimetest.go'")

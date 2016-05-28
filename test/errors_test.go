@@ -25,7 +25,7 @@ func TestErrorsDump(t *testing.T) {
 		err = errors.Wrap(err, message)
 	}
 
-	fileName, _, lineNum := tools.FuncLineinfo(runtime.Caller(0))
+	fileName, _, lineNum := tools.FuncLineInfo(runtime.Caller(0))
 
 	// build the check set
 	revert := func(data []string) (result []string) {
