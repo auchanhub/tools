@@ -52,8 +52,8 @@ type TestServer struct {
 	Port      int
 	PortTLS   int
 
-	pool      *Pool
-	poolTLS   *Pool
+	Pool      *Pool
+	PoolTLS   *Pool
 
 	server    *httptest.Server
 	serverTLS *httptest.Server
@@ -83,13 +83,13 @@ func NewTestServer(handler http.HandlerFunc) (test_server *TestServer, err error
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to init listen a port", test_server.Port, err)
 	}
-	test_server.pool = NewPool("localhost", test_server.Port).SetSkipCertVerify(true)
+	test_server.Pool = NewPool("localhost", test_server.Port).SetSkipCertVerify(true)
 
 	test_server.PortTLS, test_server.serverTLS.Listener, err = test_server.genListener()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to init TLS listen a port", test_server.PortTLS, err)
 	}
-	test_server.poolTLS = NewPool("localhost", test_server.PortTLS).SetSkipCertVerify(true)
+	test_server.PoolTLS = NewPool("localhost", test_server.PortTLS).SetSkipCertVerify(true)
 
 	return
 }
@@ -120,9 +120,9 @@ func (o *TestServer) Start() {
 func (o *TestServer) Do(req *http.Request) (*http.Response, error) {
 	switch req.URL.Scheme {
 	case "https":
-		return o.poolTLS.Do(req)
+		return o.PoolTLS.Do(req)
 	default:
-		return o.pool.Do(req)
+		return o.Pool.Do(req)
 	}
 }
 
