@@ -1,64 +1,72 @@
 package fhttp
 
 import (
-    "net/http"
-    "sync"
-    "net"
-    "time"
-    "github.com/pkg/errors"
-    "os"
-    "fmt"
+	"net/http"
+	"sync"
+	"net"
+	"time"
+	"github.com/pkg/errors"
+	"os"
+	"fmt"
+	"crypto/tls"
 )
 
 type Pool struct {
-    sync.Pool
+	sync.Pool
 
-    host    string
-    address string
+	host           string
+	address        string
+	skipCertVerify bool
 }
 
 func NewPool(address string, port int) (pool *Pool) {
-    pool = &Pool{
-        host: address,
-        address: fmt.Sprintf("%s:%d", address, port),
-    }
+	pool = &Pool{
+		host: address,
+		address: fmt.Sprintf("%s:%d", address, port),
+	}
 
-    pool.New = func() interface{} {
-        return &http.Client{
-            Timeout: 10 * time.Second,
+	pool.New = func() interface{} {
+		return &http.Client{
+			Timeout: 10 * time.Second,
 
-            Transport: &http.Transport{
-                Dial: (&net.Dialer{
-                    Timeout: 7 * time.Second,
-                }).Dial,
+			Transport: &http.Transport{
+				Dial: (&net.Dialer{
+					Timeout: 7 * time.Second,
+				}).Dial,
 
-                TLSHandshakeTimeout: 5 * time.Second,
-            },
-        }
-    }
+				TLSHandshakeTimeout: 5 * time.Second,
 
-    return
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: pool.skipCertVerify},
+			},
+		}
+	}
+
+	return
+}
+
+func (o *Pool) SetSkipCertVerify(skip bool) *Pool {
+	o.skipCertVerify = true
+
+	return o
 }
 
 func (p *Pool) Get() *http.Client {
-    return p.Pool.Get().(*http.Client)
+	return p.Pool.Get().(*http.Client)
 }
 
 func (p *Pool) Put(client *http.Client) {
-    p.Pool.Put(client)
+	p.Pool.Put(client)
 }
 
 func (p *Pool) Do(req *http.Request) (*http.Response, error) {
-    client := p.Get()
-    defer p.Put(client)
+	client := p.Get()
+	defer p.Put(client)
 
-    if client == nil {
-        return nil, errors.Wrapf(os.ErrNotExist, "failed to get a connection to '%v'", p.address)
-    }
+	if client == nil {
+		return nil, errors.Wrapf(os.ErrNotExist, "failed to get a connection to '%v'", p.address)
+	}
 
-    req.Host = p.address
-    req.URL.Host = p.address
-    req.URL.Scheme = "http"
+	req.URL.Host = p.address
 
-    return client.Do(req)
+	return client.Do(req)
 }

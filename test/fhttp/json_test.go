@@ -74,7 +74,7 @@ func TestJsonInterfaceHandle(t *testing.T) {
 }
 
 func TestJsonReadUnmarshal(t *testing.T) {
-    port, test_server, err := fhttp.TestServer(http.HandlerFunc(fhttp.JsonHandler(func(*http.Request) fhttp.JsonInterfaceHandler {
+    test_server, err := fhttp.NewTestServer(http.HandlerFunc(fhttp.JsonHandler(func(*http.Request) fhttp.JsonInterfaceHandler {
         return &testJsonData{}
     })))
     if err != nil {
@@ -84,9 +84,9 @@ func TestJsonReadUnmarshal(t *testing.T) {
     test_server.Start()
     defer test_server.Close()
 
-    req, _ := http.NewRequest("GET", "/api/test", nil)
+    req, _ := http.NewRequest("GET", "https://golang.org/api/test", nil)
 
-    resp, err := fhttp.NewPool("localhost", port).Do(req)
+    resp, err := test_server.Do(req)
     if err != nil {
         t.Error("failed to execute test request", tools.ErrorsDump(err))
         return
