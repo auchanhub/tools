@@ -11,6 +11,10 @@ import (
 	"crypto/tls"
 )
 
+type RequestExecutor interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type Pool struct {
 	sync.Pool
 

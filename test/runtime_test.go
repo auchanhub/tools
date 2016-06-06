@@ -23,3 +23,11 @@ func TestFuncLineinfo(t *testing.T) {
 		t.Error("failed to get the caller line number. The result is",lineNum,", but the expect result should great than zero")
 	}
 }
+
+func TestFuncFileName(t *testing.T) {
+	fileName := tools.FuncFileName(runtime.Caller(0))
+
+	if !strings.HasSuffix(fileName, "runtime_test.go") {
+		t.Error("failed to get the caller file name. The result is", fileName, ", but the expect result should contains 'runtimetest.go'")
+	}
+}

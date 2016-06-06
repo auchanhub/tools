@@ -99,7 +99,7 @@ func (o *TestServer) genListener() (port int, listener net.Listener, err error) 
 		address string
 	)
 	// try three times to listen a port
-	for err_count := 0; err_count < 3; err_count++ {
+	for err_count := 0; err_count < 5; err_count++ {
 		port = 10000 + int(rand.Int31n(50000))
 		address = fmt.Sprintf("localhost:%d", port)
 
