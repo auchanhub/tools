@@ -15,6 +15,36 @@ type RequestExecutor interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+type Executor struct {
+	SkipCertVerify bool
+}
+
+func (o *Executor) Do(req *http.Request) (*http.Response, error) {
+	skipCertVerify := true
+	if o != nil {
+		skipCertVerify = o.SkipCertVerify
+	}
+
+	return NewClient(skipCertVerify).Do(req)
+}
+
+func NewClient(skipCertVerify bool) *http.Client {
+	return &http.Client{
+		Timeout: 10 * time.Second,
+
+		Transport: &http.Transport{
+			Dial: (&net.Dialer{
+				Timeout: 7 * time.Second,
+			}).Dial,
+
+			TLSHandshakeTimeout: 5 * time.Second,
+
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: skipCertVerify},
+		},
+	}
+}
+
+
 type Pool struct {
 	sync.Pool
 
@@ -29,20 +59,8 @@ func NewPool(address string, port int) (pool *Pool) {
 		address: fmt.Sprintf("%s:%d", address, port),
 	}
 
-	pool.New = func() interface{} {
-		return &http.Client{
-			Timeout: 10 * time.Second,
-
-			Transport: &http.Transport{
-				Dial: (&net.Dialer{
-					Timeout: 7 * time.Second,
-				}).Dial,
-
-				TLSHandshakeTimeout: 5 * time.Second,
-
-				TLSClientConfig: &tls.Config{InsecureSkipVerify: pool.skipCertVerify},
-			},
-		}
+	pool.Pool.New = func() interface{} {
+		return NewClient(pool.skipCertVerify)
 	}
 
 	return
