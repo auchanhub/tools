@@ -8,7 +8,7 @@ import (
 func ErrorsDump(err error) string {
 	str := bytes.NewBuffer([]byte{})
 
-	errors.Wrap(str, err)
+	errors.Errorf(str, err)
 
 	return str.String()
 }
