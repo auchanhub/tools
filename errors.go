@@ -1,7 +1,6 @@
 package tools
 
 import (
-	"bytes"
 	"github.com/pkg/errors"
 )
 
