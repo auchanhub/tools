@@ -6,9 +6,5 @@ import (
 )
 
 func ErrorsDump(err error) string {
-	str := bytes.NewBuffer([]byte{})
-
-	errors.Errorf(str, err)
-
-	return str.String()
+	return errors.Cause(err).Error()
 }
