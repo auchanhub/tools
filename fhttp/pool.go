@@ -30,11 +30,11 @@ func (o *Executor) Do(req *http.Request) (*http.Response, error) {
 
 func NewClient(skipCertVerify bool) *http.Client {
 	return &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 1000 * time.Second,
 
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
-				Timeout: 7 * time.Second,
+				Timeout: 700 * time.Second,
 			}).Dial,
 
 			TLSHandshakeTimeout: 5 * time.Second,
